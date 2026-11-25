@@ -119,6 +119,24 @@ describe("Rexnet SQA testlari", () => {
     expect(request.user.sub).toBe("user-1");
   });
 
+  test("TC-16: yaroqsiz JWT bilan AuthGuard ruxsat bermaydi", () => {
+    const jwt = {
+      verify: jest.fn(() => {
+        throw new Error("invalid token");
+      }),
+    } as any;
+    const guard = new AuthGuard(jwt);
+    const context = {
+      switchToHttp: () => ({
+        getRequest: () => ({
+          headers: { authorization: "Bearer yaroqsiz-token" },
+        }),
+      }),
+    } as any;
+
+    expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
+  });
+
   test("TC-09: AI noto‘g‘ri format qaytarsa process BadRequestException beradi", async () => {
     const { service } = makeService();
     jest
@@ -172,6 +190,16 @@ describe("Rexnet SQA testlari", () => {
       fullName: "Aziz Karimov",
       email: "aziz@example.com",
       password: "A".repeat(129),
+      contactInfo: "Telegram: @aziz",
+    });
+    expect(errors.some((error) => error.property === "password")).toBe(true);
+  });
+
+  test("TC-17: 7 belgili parol rad etiladi", async () => {
+    const errors = await dtoErrors(RegisterDto, {
+      fullName: "Aziz Karimov",
+      email: "aziz@example.com",
+      password: "1234567",
       contactInfo: "Telegram: @aziz",
     });
     expect(errors.some((error) => error.property === "password")).toBe(true);
