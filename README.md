@@ -18,3 +18,11 @@ Frontend API manzili `frontend/.env` ichida `VITE_API_URL` orqali sozlanadi. Uzo
 ## Cheklovlar
 
 Bu MVPda chat, to‘lov, bron qilish va kalibrlangan match ehtimoli yo‘q. Gemini va SMTP kvotalari tashqi xizmatlarga bog‘liq. AI kaliti bo‘lmasa, blok tahlili ataylab aniq xato bilan to‘xtaydi.
+## Testlar
+
+Backend SQA testlarini ishga tushirish uchun:
+
+```sh
+cd backend
+npm test
+```
